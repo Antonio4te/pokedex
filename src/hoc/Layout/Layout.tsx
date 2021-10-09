@@ -6,39 +6,25 @@ interface Props {
     children: JSX.Element | JSX.Element[]
 }
 
-const LayoutContainer = styled(Grid.Column)`
+const LayoutContainer = styled.div`
     height: 100vh;
     padding: 0 !important;
+    overflow: hidden;
 `
 
 const Main = styled.main`
     height: 93vh;
 `;
 
-const Pusher = styled(Sidebar.Pusher)`
-    overflow: hidden;
-`;
-
-const Pushable = styled(Sidebar.Pushable)`
-    height: 100vh;
-    padding: 0;
-    overflow: hidden;
-`;
 
 const Layout = ({ children }: Props) => {
     return (
-        <Grid style={{ height: '100vh', padding: '0 !important' }}>
-            <LayoutContainer>
-                <Pushable>
-                    <Pusher>
-                        <Topbar />
-                        <Main>
-                            {children}
-                        </Main>
-                    </Pusher>
-                </Pushable>
-            </LayoutContainer>
-        </Grid>
+        <LayoutContainer>
+            <Topbar />
+            <Main>
+                {children}
+            </Main>
+        </LayoutContainer>
     );
 }
 

@@ -4,6 +4,7 @@ import logo from '../../../assets/img/logo.png';
 
 const Nav = styled(Menu)`
     height: 7vh;
+    margin: 0 !important;
 `
 
 const Topbar = () => {
