@@ -1,4 +1,3 @@
-import { Grid, Sidebar, Container } from 'semantic-ui-react';
 import Topbar from '../../components/UI/Topbar/Topbar';
 import styled from 'styled-components';
 

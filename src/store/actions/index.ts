@@ -1,0 +1,1 @@
+export { fetchAllPokemon } from "./pokemon";
