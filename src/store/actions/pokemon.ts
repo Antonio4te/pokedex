@@ -3,6 +3,7 @@ import {
   POKEMON_ACTION_FAIL,
   ALL_POKEMON_FETCH_SUCCESS,
   POKEMON_FETCH_SUCCESS,
+  CHANGE_CATCHED_POKEMON,
 } from "./actionTypes";
 import axios from "../../utils/axios";
 import { Dispatch } from "react";
@@ -34,6 +35,17 @@ const pokemonFetchSuccess = (pokemon: any) => {
     type: POKEMON_FETCH_SUCCESS,
     payload: {
       pokemon,
+    },
+  };
+};
+
+export const changeCatchedPokemon = (catched: string[]) => {
+  localStorage.setItem("catched", JSON.stringify(catched));
+
+  return {
+    type: CHANGE_CATCHED_POKEMON,
+    payload: {
+      catched,
     },
   };
 };

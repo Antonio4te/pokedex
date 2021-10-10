@@ -2,18 +2,23 @@ import _ from "lodash";
 import { useEffect } from "react";
 import { connect, ConnectedProps } from "react-redux";
 import { NavLink, useParams } from "react-router-dom";
-import { Grid, Header, Icon, Label, Loader, Menu, Segment } from "semantic-ui-react";
+import { Grid, Header, Icon, Image, Label, Loader, Menu, Segment } from "semantic-ui-react";
 import styled from "styled-components";
 import TypeChip from "../../components/UI/TypeChip/TypeChip";
 import { fetchPokemon } from "../../store/actions";
+import notCatchedIcon from '../../assets/img/pokeball-outline.png';
+import catchedIcon from '../../assets/img/pokeball.png';
+import { changeCatchedPokemon } from "../../store/actions/pokemon";
 
 const mapStateToProps = (state: RootState) => ({
     pokemon: state.pokemon.pokemon,
-    isLoading: state.pokemon.isLoading
+    isLoading: state.pokemon.isLoading,
+    catched: state.pokemon.catched
 })
 
 const mapDispatchToProps = {
-    onFetchPokemon: (id: string) => fetchPokemon(id)
+    onFetchPokemon: (id: string) => fetchPokemon(id),
+    onCatchPokemon: (catched: string[]) => changeCatchedPokemon(catched)
 }
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -35,8 +40,17 @@ const DetailsPageContainer = styled.div`
 
 const DetailsContainer = styled(Segment)`
     flex: 1 1;
+    margin-top: 0 !important;
     overflow-y: auto;
     overflow-x: hidden;
+    text-align: center;
+`;
+
+const DetailsHead = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
 `;
 
 const DetailsText = styled.p`
@@ -51,7 +65,7 @@ const StatLabel = styled(Label)`
 `;
 
 
-const PokemonDetails = ({ pokemon, isLoading, onFetchPokemon }: Props) => {
+const PokemonDetails = ({ pokemon, catched, isLoading, onFetchPokemon, onCatchPokemon }: Props) => {
 
     const params: { id: string } = useParams();
 
@@ -59,22 +73,43 @@ const PokemonDetails = ({ pokemon, isLoading, onFetchPokemon }: Props) => {
         onFetchPokemon(params.id);
     }, []);
 
-    console.log(pokemon);
-
     return (
         <DetailsPageContainer>
             <Menu>
                 <Menu.Item as={NavLink} to="/">
                     <Icon size="large" name="arrow left" />
                 </Menu.Item>
+                {pokemon && <Menu.Menu position="right">
+                    <Menu.Item
+                        active={catched.includes(pokemon.name)}
+                        disabled={catched.includes(pokemon.name)}
+                        onClick={() => onCatchPokemon([...catched, pokemon.name])}>
+                        <Image
+                            size="mini"
+                            style={{ margin: 'auto' }}
+                            src={catchedIcon} />
+                    </Menu.Item>
+                    <Menu.Item
+                        active={!catched.includes(pokemon.name)}
+                        disabled={!catched.includes(pokemon.name)}
+                        onClick={() => onCatchPokemon(catched.filter(p => p !== pokemon.name))}>
+                        <Image
+                            size="mini"
+                            style={{ margin: 'auto' }}
+                            src={notCatchedIcon} />
+                    </Menu.Item>
+                </Menu.Menu>}
             </Menu>
             <DetailsContainer>
                 {(!isLoading && pokemon) ? (
                     <>
-                        <Header>
-                            {_.capitalize(pokemon.name)}
-                        </Header>
-                        <Grid stackable >
+                        <DetailsHead>
+                            <Label style={{ marginRight: '10px' }}>
+                                <Header>{_.capitalize(pokemon.name)}</Header>
+                            </Label>
+                            <Image src={catched.includes(pokemon.name) ? catchedIcon : notCatchedIcon} size="mini" />
+                        </DetailsHead>
+                        <Grid stackable style={{ padding: '0 !important' }} >
                             <Grid.Row columns="2">
                                 <Grid.Column textAlign="center">
                                     <img width="180" height="auto" src={pokemon.sprites.front_default} alt="" />

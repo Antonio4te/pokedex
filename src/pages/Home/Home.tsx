@@ -1,4 +1,4 @@
-import { Icon, Input, Menu, Button, Image, List, Loader, Dimmer, Header } from 'semantic-ui-react';
+import { Icon, Input, Menu, Button, Image, List, Loader } from 'semantic-ui-react';
 import { fetchAllPokemon } from '../../store/actions';
 import { connect, ConnectedProps } from 'react-redux'
 import { useEffect, useRef, useState } from 'react';
@@ -11,7 +11,8 @@ import { NavLink } from 'react-router-dom';
 
 const mapStateToProps = (state: RootState) => ({
     pokemonList: state.pokemon.pokemonList,
-    isLoading: state.pokemon.isLoading
+    isLoading: state.pokemon.isLoading,
+    catched: state.pokemon.catched
 })
 
 const mapDispatchToProps = {
@@ -46,7 +47,7 @@ const PokemonList = styled(List)`
 `;
 
 
-const Home = ({ pokemonList, isLoading, onFetchAllPokemon }: Props) => {
+const Home = ({ pokemonList, isLoading, catched, onFetchAllPokemon }: Props) => {
     const [searchText, setSearchText] = useState('');
     const [loading, setLoading] = useState(false);
     const [filteredPokemon, setFilteredPokemon] = useState<any[] | null>(null);
@@ -67,10 +68,13 @@ const Home = ({ pokemonList, isLoading, onFetchAllPokemon }: Props) => {
             setLoading(true);
             timeoutRef.current = setTimeout(() => {
                 setFilteredPokemon(pokemonList?.filter(pokemon => {
-                    return filter === 'all' ? pokemon : pokemon
+                    return filter === 'catched'
+                        ? catched.includes(pokemon.name)
+                        : filter === 'not-catched'
+                            ? !catched.includes(pokemon.name) : true;
                 }).filter(pokemon => pokemon.name.includes(searchText.toLowerCase())));
                 setLoading(false);
-            }, 200);
+            }, 50);
         }
 
         return () => {
@@ -121,17 +125,20 @@ const Home = ({ pokemonList, isLoading, onFetchAllPokemon }: Props) => {
             </Menu>
             <ListContainer>
                 {(!isLoading && filteredPokemon && !loading) ? (
-                    <PokemonList divided verticalAlign="middle">
+                    <PokemonList size="large" divided verticalAlign="middle">
                         {filteredPokemon.map(pokemon => (
                             <List.Item key={pokemon.name} >
-                                <Image avatar src={catchedIcon} />
+                                <Image avatar src={catched.includes(pokemon.name) ? catchedIcon : notCatchedIcon} />
                                 <List.Content>
                                     <List.Header>
                                         {_.capitalize(pokemon.name)}
                                     </List.Header>
                                 </List.Content>
                                 <List.Content floated="right">
-                                    <Button color="blue" as={NavLink} to={`/${pokemon.name}`}>
+                                    <Button
+                                        color="blue"
+                                        size="tiny"
+                                        as={NavLink} to={`/${pokemon.name}`}>
                                         Detail
                                     </Button>
                                 </List.Content>

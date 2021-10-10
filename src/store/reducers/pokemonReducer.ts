@@ -3,13 +3,20 @@ import {
   POKEMON_ACTION_FAIL,
   ALL_POKEMON_FETCH_SUCCESS,
   POKEMON_FETCH_SUCCESS,
+  CHANGE_CATCHED_POKEMON,
 } from "./../actions/actionTypes";
 import { AnyAction } from "redux";
+
+const catched = localStorage.getItem("catched")
+  ? JSON.parse(localStorage.getItem("catched")!)
+  : [];
+
 const initialState = {
   pokemonList: null,
   pokemon: null,
   error: null,
   isLoading: false,
+  catched: [...catched],
 };
 
 const pokemonReducer = (state = initialState, action: AnyAction) => {
@@ -31,6 +38,8 @@ const pokemonReducer = (state = initialState, action: AnyAction) => {
         isLoading: false,
         pokemon: { ...action.payload.pokemon },
       };
+    case CHANGE_CATCHED_POKEMON:
+      return { ...state, catched: [...action.payload.catched] };
     default:
       return state;
   }
