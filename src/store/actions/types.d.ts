@@ -3,6 +3,7 @@ type PokemonState = {
   pokemon: any | null;
   isLoading: boolean;
   error: string | null;
+  catched: string[] | null;
 };
 
 type RootState = {

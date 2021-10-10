@@ -7,6 +7,7 @@ import notCatchedIcon from '../../assets/img/pokeball-outline.png';
 import pokedex from '../../assets/img/pokedex.png';
 import catchedIcon from '../../assets/img/pokeball.png';
 import _ from 'lodash';
+import { NavLink } from 'react-router-dom';
 
 const mapStateToProps = (state: RootState) => ({
     pokemonList: state.pokemon.pokemonList,
@@ -28,7 +29,7 @@ interface Props extends ReduxProps {
 const HomeContainer = styled.div`
     height: 100%;
     width: 100%;
-    padding: 20px;
+    padding: 0px 20px 20px 20px;
     
     display: flex;
     flex-direction: column;
@@ -65,7 +66,9 @@ const Home = ({ pokemonList, isLoading, onFetchAllPokemon }: Props) => {
         if (pokemonList) {
             setLoading(true);
             timeoutRef.current = setTimeout(() => {
-                setFilteredPokemon(pokemonList?.filter(pokemon => filter === 'all' ? pokemon : pokemon).filter(pokemon => pokemon.name.includes(searchText.toLowerCase())));
+                setFilteredPokemon(pokemonList?.filter(pokemon => {
+                    return filter === 'all' ? pokemon : pokemon
+                }).filter(pokemon => pokemon.name.includes(searchText.toLowerCase())));
                 setLoading(false);
             }, 200);
         }
@@ -89,14 +92,30 @@ const Home = ({ pokemonList, isLoading, onFetchAllPokemon }: Props) => {
                     />
                 </Menu.Item>
                 <Menu.Menu position="right">
-                    <Menu.Item active={filter === 'all'} onClick={() => setFilter('all')}>
-                        <Image style={{ margin: 'auto' }} src={pokedex} />
+                    <Menu.Item
+                        active={filter === 'all'}
+                        onClick={() => setFilter('all')}>
+                        <Image
+                            size="mini"
+                            style={{ margin: 'auto' }}
+                            src={pokedex} />
                     </Menu.Item>
-                    <Menu.Item active={filter === 'catched'} onClick={() => setFilter('catched')}>
-                        <Image style={{ margin: 'auto' }} src={catchedIcon} />
+                    <Menu.Item
+                        active={filter === 'catched'}
+                        onClick={() => setFilter('catched')}>
+                        <Image
+                            size="mini"
+                            style={{ margin: 'auto' }}
+                            src={catchedIcon} />
                     </Menu.Item>
-                    <Menu.Item active={filter === 'not-catched'} onClick={() => setFilter('not-catched')}>
-                        <Image style={{ margin: 'auto' }} src={notCatchedIcon} />
+                    <Menu.Item
+                        active={filter === 'not-catched'}
+                        onClick={() => setFilter('not-catched')}>
+                        <Image
+                            size="mini"
+                            style={{ margin: 'auto' }}
+                            src={notCatchedIcon} />
+
                     </Menu.Item>
                 </Menu.Menu>
             </Menu>
@@ -112,7 +131,7 @@ const Home = ({ pokemonList, isLoading, onFetchAllPokemon }: Props) => {
                                     </List.Header>
                                 </List.Content>
                                 <List.Content floated="right">
-                                    <Button>
+                                    <Button color="blue" as={NavLink} to={`/${pokemon.name}`}>
                                         Detail
                                     </Button>
                                 </List.Content>

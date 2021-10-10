@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import logo from '../../../assets/img/logo.png';
 
 const Nav = styled(Menu)`
-    height: 7vh;
     margin: 0 !important;
+    background: #FF0000 !important;
+    border-radius: 0 !important;
 `
 
 const Topbar = () => {

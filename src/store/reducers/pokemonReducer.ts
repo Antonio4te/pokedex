@@ -2,6 +2,7 @@ import {
   POKEMON_ACTION_START,
   POKEMON_ACTION_FAIL,
   ALL_POKEMON_FETCH_SUCCESS,
+  POKEMON_FETCH_SUCCESS,
 } from "./../actions/actionTypes";
 import { AnyAction } from "redux";
 const initialState = {
@@ -22,6 +23,13 @@ const pokemonReducer = (state = initialState, action: AnyAction) => {
         ...state,
         isLoading: false,
         pokemonList: [...action.payload.pokemon],
+      };
+
+    case POKEMON_FETCH_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        pokemon: { ...action.payload.pokemon },
       };
     default:
       return state;

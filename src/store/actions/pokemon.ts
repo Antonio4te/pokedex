@@ -2,6 +2,7 @@ import {
   POKEMON_ACTION_START,
   POKEMON_ACTION_FAIL,
   ALL_POKEMON_FETCH_SUCCESS,
+  POKEMON_FETCH_SUCCESS,
 } from "./actionTypes";
 import axios from "../../utils/axios";
 import { Dispatch } from "react";
@@ -28,6 +29,15 @@ const pokemonFetchAllSuccess = (pokemon: any[]) => {
   };
 };
 
+const pokemonFetchSuccess = (pokemon: any) => {
+  return {
+    type: POKEMON_FETCH_SUCCESS,
+    payload: {
+      pokemon,
+    },
+  };
+};
+
 export const fetchAllPokemon =
   (): AppThunk => async (dispatch: Dispatch<AnyAction>) => {
     dispatch(pokemonActionStart());
@@ -39,7 +49,24 @@ export const fetchAllPokemon =
     }
   };
 
+export const fetchPokemon =
+  (id: string): AppThunk =>
+  async (dispatch: Dispatch<AnyAction>) => {
+    dispatch(pokemonActionStart());
+    try {
+      const pokemon = await getPokemon(id);
+      dispatch(pokemonFetchSuccess(pokemon));
+    } catch (err) {
+      dispatch(pokemonActionFail());
+    }
+  };
+
 const getPokemonList = async () => {
   const res: any = await axios.get("pokemon?limit=1200");
   return [...res.data.results];
+};
+
+const getPokemon = async (id: string) => {
+  const res: any = await axios.get(`pokemon/${id}`);
+  return { ...res.data };
 };
