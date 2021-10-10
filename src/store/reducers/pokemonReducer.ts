@@ -7,16 +7,12 @@ import {
 } from "./../actions/actionTypes";
 import { AnyAction } from "redux";
 
-const catched = localStorage.getItem("catched")
-  ? JSON.parse(localStorage.getItem("catched")!)
-  : [];
-
 const initialState = {
   pokemonList: null,
   pokemon: null,
   error: null,
   isLoading: false,
-  catched: [...catched],
+  catched: [],
 };
 
 const pokemonReducer = (state = initialState, action: AnyAction) => {
